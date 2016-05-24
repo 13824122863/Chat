@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     private void showToast(String pString) {
-        Toast.makeText(this,pString,Toast.LENGTH_LONG).show();
+        Toast.makeText(LoginActivity.this, pString, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -82,9 +82,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         if(1 == pResultCode)
         {
-            Intent lvIntent = new Intent(this, MainActivity.class);
+
+            Intent lvIntent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(lvIntent);
-            this.finish();
+            LoginActivity.this.finish();
+
         }
     }
 
