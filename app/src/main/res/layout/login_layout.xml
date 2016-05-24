@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:hint="请输入用户名"
+            android:text="Allen"
             android:textSize="16sp"/>
         <View android:layout_width="0dip" android:layout_height="5dip"/>
         <EditText
@@ -38,6 +39,8 @@
             android:layout_width="200dip"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:password="true"
+            android:text="123456"
             android:hint="请输入密码"
             android:textSize="16sp"/>
     </LinearLayout>
