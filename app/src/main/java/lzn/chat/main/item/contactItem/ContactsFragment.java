@@ -2,7 +2,6 @@ package lzn.chat.main.item.contactItem;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,19 +14,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
-
 import java.util.List;
 
 import lzn.chat.R;
 import lzn.chat.absFragment;
 import lzn.chat.main.item.contactItem.addFriend.addFriendActivity;
 
-public class ContactsFragment extends absFragment {
+public class ContactsFragment extends absFragment implements  IContactView{
 	private RecyclerView mvRecyclerView;
-	private List<String> mvNameLists  ;
 	private Context mvContext;
+	private absContactPresenter mvContactPresenter;
 	public ContactsFragment(Context pContext)
 	{
 		mvContext = pContext;
@@ -35,9 +31,9 @@ public class ContactsFragment extends absFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		new getFriendsNameListAsy().execute();
 		setHasOptionsMenu(true);
-
+		mvContactPresenter = new contactPresenterImpl(mvContext,this);
+		mvContactPresenter.getFriendList();
 	}
 
 	@Override
@@ -52,7 +48,6 @@ public class ContactsFragment extends absFragment {
 			lvToolbar.setTitle("Contacter");
 			((AppCompatActivity) mvApplication.getMainActivity()).setSupportActionBar(lvToolbar);
 		}
-
 		return lvView;
 	}
 
@@ -73,35 +68,16 @@ public class ContactsFragment extends absFragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	private void setUpAdapter()
-	{
-		if(mvRecyclerView != null && mvNameLists.size() != 0)
+	@Override
+	public void showFriendList(List<String> pList) {
+		if(mvRecyclerView != null && pList.size() != 0)
 		{
 			mvRecyclerView.setLayoutManager(new LinearLayoutManager(mvContext));
-			mvRecyclerView.setAdapter(new ContactsAdapter(mvContext, mvNameLists));
+			mvRecyclerView.setAdapter(new ContactsAdapter(mvContext, pList));
 			mvRecyclerView.addItemDecoration(new RecycleViewDivider(mvContext, LinearLayoutManager.HORIZONTAL));
 
 		}
 	}
 
-	class getFriendsNameListAsy extends AsyncTask<Void,Void,Void>
-	{
 
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				mvNameLists = EMClient.getInstance().contactManager().getAllContactsFromServer();
-			} catch (HyphenateException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			setUpAdapter();
-		}
-	}
 }
