@@ -9,6 +9,20 @@
         android:minHeight="?attr/actionBarSize"
         android:paddingTop="@dimen/toolbar_padding_top"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <TextView
+        android:id="@+id/toolBar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:singleLine="true"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"/>
+
+
+
+    </android.support.v7.widget.Toolbar>
 
 

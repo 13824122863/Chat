@@ -1,6 +1,7 @@
 package lzn.chat.main.item.contactItem;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import lzn.chat.R;
+import lzn.chat.main.item.contactItem.chat.ChatActivity;
 
 /**
  * Created by Allen on 2016/5/23.
@@ -27,7 +28,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     @Override
     public ContactsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View lvView = LayoutInflater.from(mvContext).inflate(R.layout.contacts_recyclerview_item,null);
         lvView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return new ContactsHolder(lvView);
@@ -58,7 +58,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
             mvRootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mvContext,"onClick:"+mvNameText.getTag(),Toast.LENGTH_SHORT).show();
+                    Intent lvIntent = new Intent(mvContext, ChatActivity.class);
+                    lvIntent.putExtra(ChatActivity.CHATTOWHO,(String)mvNameText.getTag());
+                    mvContext.startActivity(lvIntent);
                 }
             });
         }
