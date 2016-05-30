@@ -50,7 +50,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".main.item.contactItem.addFriend.addFriendActivity"/>
-        <activity android:name=".main.item.contactItem.chat.ChatActivity"/>
+        <activity android:name=".main.item.contactItem.chat.view.ChatActivity"/>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data android:name="com.google.android.gms.version"
