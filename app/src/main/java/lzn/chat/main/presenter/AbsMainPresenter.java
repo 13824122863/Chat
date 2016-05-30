@@ -2,6 +2,8 @@ package lzn.chat.main.presenter;
 
 import android.app.FragmentTransaction;
 
+import lzn.chat.absFragment;
+
 /**
  * Created by Allen on 2016/5/23.
  */
@@ -12,4 +14,5 @@ public interface AbsMainPresenter {
      * **/
     void selectTab(int pPosition);
     void hideFragment(FragmentTransaction pTransaction);
+    absFragment getCurrentFragment();
 }

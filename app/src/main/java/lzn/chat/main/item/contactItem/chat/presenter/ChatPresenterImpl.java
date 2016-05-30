@@ -1,4 +1,4 @@
-package lzn.chat.main.item.contactItem.chat;
+package lzn.chat.main.item.contactItem.chat.presenter;
 
 import android.content.Context;
 
@@ -9,6 +9,11 @@ import com.hyphenate.chat.EMMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lzn.chat.main.item.contactItem.chat.model.ChatUserModel;
+import lzn.chat.main.item.contactItem.chat.view.ChatActivity;
+import lzn.chat.main.item.contactItem.chat.view.IChatView;
+import lzn.chat.tools.Utils;
 
 /**
  * Created by Allen on 2016/5/25.
@@ -44,13 +49,16 @@ public class ChatPresenterImpl implements absChatPresenter {
             // List<EMMessage> messages = conversation.loadMoreMsgFromDB(startMsgId, pagesize);
             for (EMMessage lvMessage : messages) {
                 lvUserModel = new ChatUserModel();
-                lvUserModel.setMsgCotent(lvMessage.getBody().toString());
-                lvUserModel.setTime((String.valueOf(lvMessage.getMsgTime())));
+
+                lvUserModel.setMsgCotent(Utils.replaceMsgContent(lvMessage.getBody().toString()));
+                lvUserModel.setTime(Utils.long2String(lvMessage.getMsgTime()));
+                lvUserModel.setIsSend(lvMessage.getTo().equalsIgnoreCase(pToWho));
                 lvList.add(lvUserModel);
             }
         }
         return lvList;
     }
+
 
     EMCallBack MsgCallBackListener = new EMCallBack() {
         @Override

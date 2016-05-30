@@ -8,14 +8,13 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hyphenate.EMMessageListener;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
-
 import java.util.List;
 
 import lzn.chat.R;
 import lzn.chat.absActivity;
+import lzn.chat.absFragment;
+import lzn.chat.main.item.contactItem.chat.model.ReceiveMsgModel;
+import lzn.chat.main.item.messageItem.MessageFragment;
 import lzn.chat.main.presenter.AbsMainPresenter;
 import lzn.chat.main.presenter.MainPresenterImpl;
 
@@ -85,7 +84,7 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
      */
     private FragmentManager mvFragmentManager;
     private AbsMainPresenter mvMainPresenter;
-
+    private absFragment mvCurrentFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +94,20 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
         mvMainPresenter = new MainPresenterImpl(this,mvFragmentManager,this);
         initView();
         onClick(messageLayout); // 默认界面
+    }
+
+    @Override
+    public void newMsg(List<ReceiveMsgModel> pMessage) {
+        mvCurrentFragment = mvMainPresenter.getCurrentFragment();
+        //如果当前界面是聊天界面，把参数传给MessageFragment，直接更新界面
+        if(mvCurrentFragment instanceof MessageFragment)
+        {
+            ((MessageFragment) mvCurrentFragment).onRecevieNewMsg(pMessage);
+        }else
+        {
+            //通知栏通知有新消息
+        }
+
     }
 
     private void initView() {
@@ -144,7 +157,6 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
         }
 
     }
-
     @Override
     public void clearSelection() {
         messageImage.setImageResource(R.drawable.message_unselected);
@@ -155,46 +167,5 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
         newsText.setTextColor(Color.parseColor("#82858b"));
         settingImage.setImageResource(R.drawable.setting_unselected);
         settingText.setTextColor(Color.parseColor("#82858b"));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
-
-    }
-
-    EMMessageListener msgListener = new EMMessageListener() {
-
-        @Override
-        public void onMessageReceived(List<EMMessage> messages) {
-            //收到消息
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> messages) {
-            //收到透传消息
-        }
-
-        @Override
-        public void onMessageReadAckReceived(List<EMMessage> messages) {
-            //收到已读回执
-        }
-
-        @Override
-        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
-            //收到已送达回执
-        }
-
-        @Override
-        public void onMessageChanged(EMMessage message, Object change) {
-            //消息状态变动
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 }

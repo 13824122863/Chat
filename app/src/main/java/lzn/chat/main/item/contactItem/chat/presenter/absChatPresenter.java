@@ -1,6 +1,8 @@
-package lzn.chat.main.item.contactItem.chat;
+package lzn.chat.main.item.contactItem.chat.presenter;
 
 import java.util.List;
+
+import lzn.chat.main.item.contactItem.chat.model.ChatUserModel;
 
 /**
  * Created by Allen on 2016/5/25.

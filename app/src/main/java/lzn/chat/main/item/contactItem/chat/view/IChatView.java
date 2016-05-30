@@ -1,4 +1,4 @@
-package lzn.chat.main.item.contactItem.chat;
+package lzn.chat.main.item.contactItem.chat.view;
 
 /**
  * Created by Allen on 2016/5/25.

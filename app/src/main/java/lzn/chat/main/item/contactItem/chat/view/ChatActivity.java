@@ -1,4 +1,4 @@
-package lzn.chat.main.item.contactItem.chat;
+package lzn.chat.main.item.contactItem.chat.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +15,14 @@ import android.widget.Toast;
 import java.util.List;
 
 import lzn.chat.R;
+import lzn.chat.main.item.contactItem.chat.model.ChatUserModel;
+import lzn.chat.main.item.contactItem.chat.presenter.ChatPresenterImpl;
+import lzn.chat.main.item.contactItem.chat.presenter.absChatPresenter;
 
 /**
  * Created by Allen on 2016/5/25.
  */
-public class ChatActivity extends AppCompatActivity implements IChatView , OnClickListener {
+public class ChatActivity extends AppCompatActivity implements IChatView, OnClickListener {
 
     public final static String CHATTOWHO = "ChatToWho";
 
@@ -105,6 +108,7 @@ public class ChatActivity extends AppCompatActivity implements IChatView , OnCli
                 if(!((ChatPresenterImpl)mvChatPresenter).checkIsEmpty(lvMsgContent))
                 {
                     mvChatPresenter.sendMsg(lvMsgContent,mvChatToWho);
+                    mvInputMsgEditView.setText("");
                 }
                 break;
         }

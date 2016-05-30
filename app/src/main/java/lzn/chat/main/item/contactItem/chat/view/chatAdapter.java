@@ -1,4 +1,4 @@
-package lzn.chat.main.item.contactItem.chat;
+package lzn.chat.main.item.contactItem.chat.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lzn.chat.R;
+import lzn.chat.main.item.contactItem.chat.model.ChatUserModel;
 
 /**
  * Created by Allen on 2016/5/25.
@@ -60,6 +61,7 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.ChatHolder> {
         if(mvList.get(position) != null)
         {
             holder.mvMsgContent.setText(mvList.get(position).getMsgCotent());
+            holder.mvTimeView.setText(mvList.get(position).getTime());
         }
 
     }

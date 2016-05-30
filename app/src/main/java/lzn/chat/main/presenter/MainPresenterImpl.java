@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 
 import lzn.chat.R;
+import lzn.chat.absFragment;
 import lzn.chat.main.item.contactItem.ContactsFragment;
 import lzn.chat.main.item.discoveryItem.DiscoveryFragment;
 import lzn.chat.main.item.messageItem.MessageFragment;
@@ -60,7 +61,7 @@ public class MainPresenterImpl implements AbsMainPresenter {
 
                 if (mvMessageFragment == null) {
                     // 如果MessageFragment为空，则创建一个并添加到界面上
-                    mvMessageFragment = new MessageFragment();
+                    mvMessageFragment = new MessageFragment(mvContext);
                     transaction.add(R.id.content, mvMessageFragment);
                 } else {
                     // 如果MessageFragment不为空，则直接将它显示出来
@@ -118,6 +119,22 @@ public class MainPresenterImpl implements AbsMainPresenter {
         if (mvSettingFragment != null) {
             pTransaction.hide(mvSettingFragment);
         }
-
+    }
+    @Override
+    public absFragment getCurrentFragment()
+    {
+        if (mvMessageFragment != null) {
+           return mvMessageFragment;
+        }
+        if (mvContactsFragment != null) {
+            return mvContactsFragment;
+        }
+        if (mvDiscoveryFragment != null) {
+            return mvDiscoveryFragment;
+        }
+        if (mvSettingFragment != null) {
+            return mvSettingFragment;
+        }
+        return  null;
     }
 }

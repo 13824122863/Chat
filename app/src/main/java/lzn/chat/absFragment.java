@@ -14,4 +14,5 @@ public abstract class absFragment  extends Fragment {
         super.onCreate(savedInstanceState);
         mvApplication = myApplication.getInstance();
     }
+
 }

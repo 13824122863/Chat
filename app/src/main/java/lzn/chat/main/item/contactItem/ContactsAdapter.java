@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import lzn.chat.R;
-import lzn.chat.main.item.contactItem.chat.ChatActivity;
+import lzn.chat.main.item.contactItem.chat.view.ChatActivity;
 
 /**
  * Created by Allen on 2016/5/23.
