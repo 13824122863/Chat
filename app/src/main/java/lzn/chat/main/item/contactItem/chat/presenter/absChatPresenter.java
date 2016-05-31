@@ -2,7 +2,7 @@ package lzn.chat.main.item.contactItem.chat.presenter;
 
 import java.util.List;
 
-import lzn.chat.main.item.contactItem.chat.model.ChatUserModel;
+import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 
 /**
  * Created by Allen on 2016/5/25.
@@ -14,7 +14,7 @@ public interface absChatPresenter {
      * **/
     void sendMsg(String pMsg , String pToWho);
 
-    List<ChatUserModel> getMsgHistory(String pToWho);
+    List<MsgModel> getMsgHistory(String pToWho);
 
 
 }

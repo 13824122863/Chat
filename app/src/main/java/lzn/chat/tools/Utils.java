@@ -21,6 +21,13 @@ public class Utils {
 
     }
 
+    public static String getCurrentDateString()
+    {
+        Date lvDate = new Date();
+        DateFormat lvDateFormate = new SimpleDateFormat("yyyy/MM/dd  HH:mm:ss", Locale.CHINA);
+        return lvDateFormate.format(lvDate);
+    }
+
     public static String replaceMsgContent(String pString) {
         String lvResult = "";
         String lvReplace = "txt:";

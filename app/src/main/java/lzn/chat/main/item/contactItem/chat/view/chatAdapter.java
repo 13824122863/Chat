@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lzn.chat.R;
-import lzn.chat.main.item.contactItem.chat.model.ChatUserModel;
+import lzn.chat.main.item.contactItem.chat.model.MsgModel;
+import lzn.chat.myApplication;
 
 /**
  * Created by Allen on 2016/5/25.
@@ -24,10 +25,10 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.ChatHolder> {
         RECEIVE,
         SEND
     }
-    private List<ChatUserModel> mvList = new ArrayList<ChatUserModel>();
+    private List<MsgModel> mvList = new ArrayList<MsgModel>();
     private Context mvContext;
 
-    public chatAdapter(Context pContext ,List<ChatUserModel> pList)
+    public chatAdapter(Context pContext ,List<MsgModel> pList)
     {
         mvContext = pContext;
         mvList = pList;
@@ -51,7 +52,7 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.ChatHolder> {
         boolean lvResult = false;
         if(mvList.size() != 0)
         {
-            lvResult = mvList.get(position).isSender();
+            lvResult = mvList.get(position).getFrom().equals(myApplication.getInstance().getAccountName());
         }
         return lvResult ? ITEM_TYPE.SEND.ordinal() : ITEM_TYPE.RECEIVE.ordinal();
     }
@@ -60,12 +61,16 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.ChatHolder> {
     public void onBindViewHolder(ChatHolder holder, int position) {
         if(mvList.get(position) != null)
         {
-            holder.mvMsgContent.setText(mvList.get(position).getMsgCotent());
-            holder.mvTimeView.setText(mvList.get(position).getTime());
+            holder.mvMsgContent.setText(mvList.get(position).getContent());
+            holder.mvTimeView.setText(mvList.get(position).getReceiveTime());
         }
 
     }
-
+    public void addItem(MsgModel pMsgModel)
+    {
+        mvList.add(pMsgModel);
+        notifyItemInserted(mvList.size() + 1);
+    }
     @Override
     public int getItemCount() {
         return mvList.size();

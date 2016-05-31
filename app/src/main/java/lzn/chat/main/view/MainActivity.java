@@ -13,7 +13,8 @@ import java.util.List;
 import lzn.chat.R;
 import lzn.chat.absActivity;
 import lzn.chat.absFragment;
-import lzn.chat.main.item.contactItem.chat.model.ReceiveMsgModel;
+import lzn.chat.db.DBManager;
+import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 import lzn.chat.main.item.messageItem.MessageFragment;
 import lzn.chat.main.presenter.AbsMainPresenter;
 import lzn.chat.main.presenter.MainPresenterImpl;
@@ -97,7 +98,7 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
     }
 
     @Override
-    public void newMsg(List<ReceiveMsgModel> pMessage) {
+    public void newMsg(List<MsgModel> pMessage) {
         mvCurrentFragment = mvMainPresenter.getCurrentFragment();
         //如果当前界面是聊天界面，把参数传给MessageFragment，直接更新界面
         if(mvCurrentFragment instanceof MessageFragment)
@@ -107,7 +108,8 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
         {
             //通知栏通知有新消息
         }
-
+        DBManager lvDBManager = new DBManager(this);
+        lvDBManager.addChatMsg(pMessage);
     }
 
     private void initView() {

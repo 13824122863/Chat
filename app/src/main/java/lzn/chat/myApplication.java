@@ -13,6 +13,7 @@ import com.hyphenate.chat.EMOptions;
 public class myApplication extends Application {
     private static myApplication mvApplication;
     private AppCompatActivity mvMainActivity;
+    private String mvAccountName;
     public static myApplication getInstance()
     {
         if(mvApplication == null)
@@ -42,5 +43,13 @@ public class myApplication extends Application {
     public void setMainActivity(AppCompatActivity pMainActivity) {
         if(pMainActivity instanceof AppCompatActivity)
             mvMainActivity = pMainActivity;
+    }
+
+    public String getAccountName() {
+        return mvAccountName;
+    }
+
+    public void setAccountName(String pAccountName) {
+        mvAccountName = pAccountName;
     }
 }

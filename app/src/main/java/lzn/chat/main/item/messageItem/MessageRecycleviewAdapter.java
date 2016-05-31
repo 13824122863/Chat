@@ -14,7 +14,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import lzn.chat.R;
-import lzn.chat.main.item.contactItem.chat.model.ReceiveMsgModel;
+import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 
 
 /**
@@ -22,9 +22,9 @@ import lzn.chat.main.item.contactItem.chat.model.ReceiveMsgModel;
  */
 public class MessageRecycleviewAdapter extends RecyclerView.Adapter<MessageRecycleviewAdapter.MessageHolder> implements OnClickListener {
     private Context mvContext;
-    private List<ReceiveMsgModel> mvList;
+    private List<MsgModel> mvList;
 
-    public MessageRecycleviewAdapter(Context pContext , List<ReceiveMsgModel> pList)
+    public MessageRecycleviewAdapter(Context pContext , List<MsgModel> pList)
     {
         mvContext = pContext;
         mvList = pList;

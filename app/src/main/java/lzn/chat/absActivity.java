@@ -16,7 +16,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import lzn.chat.main.item.contactItem.chat.model.ReceiveMsgModel;
+import lzn.chat.db.DBManager;
+import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 import lzn.chat.tools.ConstantManager;
 import lzn.chat.tools.Utils;
 
@@ -60,12 +61,14 @@ public abstract class absActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent pIntent) {
             if(pIntent.getAction().equals(ConstantManager.CHAT_RECEIVER))
             {
-               List<ReceiveMsgModel> lvList = (ArrayList) pIntent.getExtras().getSerializable(ConstantManager.CHAT_RECEIVE_MSG_LIST);
+               List<MsgModel> lvList = (ArrayList) pIntent.getExtras().getSerializable(ConstantManager.CHAT_RECEIVE_MSG_LIST);
+                DBManager lvDBManager = new DBManager(absActivity.this);
+                lvDBManager.addChatMsg(lvList);
                 newMsg(lvList);
             }
         }
     };
-    public abstract void newMsg(List<ReceiveMsgModel> pMessage);
+    public abstract void newMsg(List<MsgModel> pMessage);
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -106,10 +109,10 @@ public abstract class absActivity extends AppCompatActivity {
     };
 
     private Serializable getSerializable(List<EMMessage> pMessage) {
-        ArrayList<ReceiveMsgModel> lvList = new ArrayList<>();
-        ReceiveMsgModel lvMsgModel;
+        ArrayList<MsgModel> lvList = new ArrayList<>();
+        MsgModel lvMsgModel;
         for (EMMessage lvMsg:pMessage) {
-            lvMsgModel = new ReceiveMsgModel();
+            lvMsgModel = new MsgModel();
             lvMsgModel.setContent(Utils.replaceMsgContent(lvMsg.getBody().toString()));
             lvMsgModel.setFrom(lvMsg.getFrom());
             lvMsgModel.setTo(lvMsg.getTo());

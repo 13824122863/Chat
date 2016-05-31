@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Allen on 2016/5/30.
  */
-public class ReceiveMsgModel implements Serializable {
+public class MsgModel implements Serializable {
     private String mvContent;   //聊天内容
     private String mvReceiveTime;  //接收时间
     private String mvFrom;   //谁发送

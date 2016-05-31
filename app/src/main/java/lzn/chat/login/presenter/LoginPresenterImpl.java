@@ -13,6 +13,7 @@ import com.hyphenate.util.NetUtils;
 
 import lzn.chat.login.view.ILoginView;
 import lzn.chat.login.view.LoginActivity;
+import lzn.chat.myApplication;
 
 /**
  * Created by Allen on 2016/5/19.
@@ -20,10 +21,12 @@ import lzn.chat.login.view.LoginActivity;
 public class LoginPresenterImpl implements AbsLoginPresenter {
     private ILoginView mvILoginView;
     private Context mvContext;
+    private myApplication mvApplication;
     public LoginPresenterImpl (Context pContext,ILoginView pILoginView)
     {
         mvContext = pContext;
         mvILoginView = pILoginView;
+        mvApplication = myApplication.getInstance();
         //注册一个监听连接状态的listener
 //        EMClient.getInstance().addConnectionListener(new MyConnectionListener());
     }
@@ -61,7 +64,7 @@ public class LoginPresenterImpl implements AbsLoginPresenter {
     }
 
     @Override
-    public void doLogin(String pUserAcc, String pUserPwd) {
+    public void doLogin(final String pUserAcc, String pUserPwd) {
         //这里应该用异步去数据库查询账号密码，根据查询结果回调
         //注册失败会抛出HyphenateException
         try {
@@ -73,9 +76,9 @@ public class LoginPresenterImpl implements AbsLoginPresenter {
                         public void run() {
                             EMClient.getInstance().groupManager().loadAllGroups();
                             EMClient.getInstance().chatManager().loadAllConversations();
-                            Toast.makeText(mvContext,"Login successful!",Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(mvContext, "Login successful!", Toast.LENGTH_SHORT).show();
                             mvILoginView.loginResult(1);
+                            mvApplication.setAccountName(pUserAcc);
                         }
                     });
                 }

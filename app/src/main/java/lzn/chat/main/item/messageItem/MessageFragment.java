@@ -17,7 +17,7 @@ import java.util.List;
 import lzn.chat.R;
 import lzn.chat.absFragment;
 import lzn.chat.main.item.contactItem.RecycleViewDivider;
-import lzn.chat.main.item.contactItem.chat.model.ReceiveMsgModel;
+import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 
 public class MessageFragment extends absFragment {
 	private RecyclerView mvRecyclerView;
@@ -26,6 +26,13 @@ public class MessageFragment extends absFragment {
 	{
 		mvContext = pContext;
 	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+	}
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View lvView = inflater.inflate(R.layout.message_layout, container, false);
 		initView(lvView);
@@ -47,7 +54,7 @@ public class MessageFragment extends absFragment {
 		mvRecyclerView = (RecyclerView) pView.findViewById(R.id.recyclerView);
 	}
 
-	public void onRecevieNewMsg(List<ReceiveMsgModel> pMessage)
+	public void onRecevieNewMsg(List<MsgModel> pMessage)
 	{
 		MessageRecycleviewAdapter lvAdapter = new MessageRecycleviewAdapter(mvContext,pMessage);
 		mvRecyclerView.setLayoutManager(new LinearLayoutManager(mvContext));
