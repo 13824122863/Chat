@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lzn.chat.main.item.contactItem.chat.model.MsgModel;
+import lzn.chat.myApplication;
 
 /**
  * Created by Allen on 2016/5/31.
@@ -26,19 +27,9 @@ public class DBManager {
 
 
     public void addChatMsg(List<MsgModel> pList) {
-        String sql = "insert into " + mvDBHelper.CHATMSGTABLE + " values (?,?,?,?)";
-        mvWriteDatabase.beginTransaction();
-        try {
-            for (MsgModel lvModel : pList) {
-                mvWriteDatabase.execSQL(sql, new Object[]{lvModel.getContent(), lvModel.getReceiveTime(), lvModel.getFrom(), lvModel.getTo()});
+        for (MsgModel lvModel : pList) {
+              this.addChatMsg(lvModel);
             }
-            mvWriteDatabase.setTransactionSuccessful(); //一定要调用这句话，不然插进去数据读取不出来
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("insert Error",e.getMessage());
-        }finally {
-            mvWriteDatabase.endTransaction();
-        }
     }
 
     public void addChatMsg(MsgModel pMsgModel) {
@@ -70,12 +61,28 @@ public class DBManager {
             lvList.add(lvModel);
         }
         lvCurso.close();
+
+        return lvList;
+    }
+    public List<MsgModel> getAllMsgHistoryFromDb() {
+        List<MsgModel> lvList = new ArrayList<>();
+        MsgModel lvModel;
+        Cursor lvCurso = mvReadDatabase.rawQuery("select * from "+ mvDBHelper.CHATMSGTABLE +" where msgFrom != ? order by msgTime asc" ,new String[]{myApplication.getInstance().getAccountName()});
+        while (lvCurso.moveToNext()) {
+            lvModel = new MsgModel();
+            lvModel.setFrom(lvCurso.getString(lvCurso.getColumnIndex("msgFrom")));
+            lvModel.setTo(lvCurso.getString(lvCurso.getColumnIndex("msgTo")));
+            lvModel.setContent(lvCurso.getString(lvCurso.getColumnIndex("msgContent")));
+            lvModel.setReceiveTime(lvCurso.getString(lvCurso.getColumnIndex("msgTime")));
+            lvList.add(lvModel);
+        }
+        lvCurso.close();
         return lvList;
     }
 
     private Cursor queryTheCursor(String pWho) {
-        String querySql = "select * from " + mvDBHelper.CHATMSGTABLE + " where msgTo = ?";
-        return mvReadDatabase.rawQuery(querySql, new String[]{pWho});
+        String querySql = "select * from " + mvDBHelper.CHATMSGTABLE + " where ((msgTo = ? and msgFrom = ?) or  (msgTo = ? and msgFrom = ? )) ";
+        return mvReadDatabase.rawQuery(querySql, new String[]{pWho,myApplication.getInstance().getAccountName(),myApplication.getInstance().getAccountName(),pWho});
     }
 
 

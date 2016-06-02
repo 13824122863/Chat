@@ -1,10 +1,12 @@
 package lzn.chat;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
@@ -25,6 +27,7 @@ import lzn.chat.tools.Utils;
  * Created by Allen on 2016/5/24.
  */
 public abstract class absActivity extends AppCompatActivity {
+
     protected myApplication mvApplication;
 
     @Override
@@ -34,7 +37,7 @@ public abstract class absActivity extends AppCompatActivity {
         WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
         localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         mvApplication = myApplication.getInstance();
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+
     }
 
     @Override
@@ -56,25 +59,28 @@ public abstract class absActivity extends AppCompatActivity {
         unregisterReceiver(mvChatListenertReceiver);
     }
 
+
     BroadcastReceiver mvChatListenertReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent pIntent) {
-            if(pIntent.getAction().equals(ConstantManager.CHAT_RECEIVER))
-            {
-               List<MsgModel> lvList = (ArrayList) pIntent.getExtras().getSerializable(ConstantManager.CHAT_RECEIVE_MSG_LIST);
-                DBManager lvDBManager = new DBManager(absActivity.this);
+            if (pIntent.getAction().equals(ConstantManager.CHAT_RECEIVER)) {
+                List<MsgModel> lvList = (ArrayList) pIntent.getExtras().getSerializable(ConstantManager.CHAT_RECEIVE_MSG_LIST);
+                DBManager lvDBManager = mvApplication.getDBManager();
                 lvDBManager.addChatMsg(lvList);
                 newMsg(lvList);
             }
         }
     };
+
     public abstract void newMsg(List<MsgModel> pMessage);
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
-    EMMessageListener msgListener = new EMMessageListener() {
+
+    public EMMessageListener msgListener = new EMMessageListener() {
 
         @Override
         public void onMessageReceived(List<EMMessage> pMessage) {
@@ -111,7 +117,7 @@ public abstract class absActivity extends AppCompatActivity {
     private Serializable getSerializable(List<EMMessage> pMessage) {
         ArrayList<MsgModel> lvList = new ArrayList<>();
         MsgModel lvMsgModel;
-        for (EMMessage lvMsg:pMessage) {
+        for (EMMessage lvMsg : pMessage) {
             lvMsgModel = new MsgModel();
             lvMsgModel.setContent(Utils.replaceMsgContent(lvMsg.getBody().toString()));
             lvMsgModel.setFrom(lvMsg.getFrom());
@@ -122,5 +128,21 @@ public abstract class absActivity extends AppCompatActivity {
         return lvList;
     }
 
+    public void NewMsgNotification(List<MsgModel> pModelList) {
+        for (MsgModel lvModel : pModelList) {
+            this.NewMsgNotification(lvModel);
+        }
+    }
+
+    public void NewMsgNotification(MsgModel pMsgModel) {
+        NotificationCompat.Builder lvBuilder = new NotificationCompat.Builder(this);
+        NotificationManager lvManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        lvBuilder.setContentTitle(pMsgModel.getFrom());
+        lvBuilder.setContentText(pMsgModel.getContent());
+        lvBuilder.setSmallIcon(R.drawable.account_icon);
+        lvBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        lvManager.notify(1, lvBuilder.build());
+
+    }
 
 }

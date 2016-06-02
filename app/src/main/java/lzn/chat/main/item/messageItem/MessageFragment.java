@@ -20,46 +20,54 @@ import lzn.chat.main.item.contactItem.RecycleViewDivider;
 import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 
 public class MessageFragment extends absFragment {
-	private RecyclerView mvRecyclerView;
-	private Context mvContext;
-	public MessageFragment(Context pContext)
-	{
-		mvContext = pContext;
-	}
+    private RecyclerView mvRecyclerView;
+    private Context mvContext;
+    private absMessagePresenter mvMessagePresenter;
+    private List<MsgModel> mvAllHistoryList;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    public MessageFragment(Context pContext) {
+        mvContext = pContext;
+        mvMessagePresenter = new MessagePersenterImpl(mvContext);
+    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View lvView = inflater.inflate(R.layout.message_layout, container, false);
+        initView(lvView);
+        setAdapter();
+        Toolbar lvToolbar = (Toolbar) lvView.findViewById(R.id.toolbar);
+        if (lvToolbar != null) {
+            lvToolbar.setTitle("Message");
+            ((AppCompatActivity) mvApplication.getMainActivity()).setSupportActionBar(lvToolbar);
+        }
+        return lvView;
+    }
 
-	}
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View lvView = inflater.inflate(R.layout.message_layout, container, false);
-		initView(lvView);
-		Toolbar lvToolbar = (Toolbar) lvView.findViewById(R.id.toolbar);
-		if(lvToolbar != null)
-		{
-			lvToolbar.setTitle("Message");
-			((AppCompatActivity) mvApplication.getMainActivity()).setSupportActionBar(lvToolbar);
-		}
-		return lvView;
-	}
+    private void initView(View pView) {
+        mvRecyclerView = (RecyclerView) pView.findViewById(R.id.recyclerView);
+        mvRecyclerView.setLayoutManager(new LinearLayoutManager(mvContext));
+        mvRecyclerView.addItemDecoration(new RecycleViewDivider(mvContext, LinearLayoutManager.HORIZONTAL));
+    }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-	}
+    public void onRecevieNewMsg(List<MsgModel> pMessage) {
+        MessageRecycleviewAdapter lvAdapter =(MessageRecycleviewAdapter)mvRecyclerView.getAdapter();
+        if( lvAdapter != null)
+        {
+            lvAdapter.addItem(pMessage);
+        }else {
+            lvAdapter = new MessageRecycleviewAdapter(mvContext,pMessage);
+            mvRecyclerView.setAdapter(lvAdapter);
+        }
+    }
 
-	private void initView(View pView) {
-		mvRecyclerView = (RecyclerView) pView.findViewById(R.id.recyclerView);
-	}
-
-	public void onRecevieNewMsg(List<MsgModel> pMessage)
-	{
-		MessageRecycleviewAdapter lvAdapter = new MessageRecycleviewAdapter(mvContext,pMessage);
-		mvRecyclerView.setLayoutManager(new LinearLayoutManager(mvContext));
-		mvRecyclerView.addItemDecoration(new RecycleViewDivider(mvContext, LinearLayoutManager.HORIZONTAL));
-		mvRecyclerView.setAdapter(lvAdapter);
-		mvRecyclerView.invalidate();
-	}
+    private void setAdapter() {
+        mvAllHistoryList = mvMessagePresenter.getAllChatHistory();
+        if (mvAllHistoryList != null) {
+            MessageRecycleviewAdapter lvAdapter = new MessageRecycleviewAdapter(mvContext, mvAllHistoryList);
+            mvRecyclerView.setAdapter(lvAdapter);
+        }
+    }
 }

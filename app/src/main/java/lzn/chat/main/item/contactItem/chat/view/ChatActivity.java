@@ -1,7 +1,6 @@
 package lzn.chat.main.item.contactItem.chat.view;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lzn.chat.R;
+import lzn.chat.absActivity;
 import lzn.chat.main.item.contactItem.RecycleViewDivider;
 import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 import lzn.chat.main.item.contactItem.chat.presenter.ChatPresenterImpl;
@@ -25,7 +25,7 @@ import lzn.chat.main.item.contactItem.chat.presenter.absChatPresenter;
 /**
  * Created by Allen on 2016/5/25.
  */
-public class ChatActivity extends AppCompatActivity implements IChatView, OnClickListener {
+public class ChatActivity extends absActivity implements IChatView, OnClickListener {
 
     public final static String CHATTOWHO = "ChatToWho";
 
@@ -58,6 +58,28 @@ public class ChatActivity extends AppCompatActivity implements IChatView, OnClic
         initToolBar();
     }
 
+    @Override
+    public void newMsg(List<MsgModel> pMessage) {
+        for (MsgModel lvModel: pMessage) {
+            if(lvModel.getFrom().equals(mvChatToWho))
+            {
+                //当前聊天对象发送的消息，直接更新界面
+                if (mvChatAdapter == null)
+                {
+                    List<MsgModel> lvList = new ArrayList<>();
+                    lvList.add(lvModel);
+                    setAdadpter(lvList);
+                }else {
+                    mvChatAdapter.addItem(lvModel);
+                    mvRecyclerView.smoothScrollToPosition(mvChatAdapter.getItemCount());
+                }
+            }else {
+                //新消息不是当前好友发送，通知栏推送
+                NewMsgNotification(lvModel);
+            }
+        }
+    }
+
     private void initToolBar() {
         Toolbar lvToobar = (Toolbar) this.findViewById(R.id.toolbar);
         lvToobar.setTitle("");
@@ -75,9 +97,10 @@ public class ChatActivity extends AppCompatActivity implements IChatView, OnClic
 
     private void initView() {
         mvRecyclerView = (RecyclerView) this.findViewById(R.id.recyclerView);
-        mvRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mvRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        LinearLayoutManager layoutManager =new LinearLayoutManager(this);
 
+        mvRecyclerView.setLayoutManager(layoutManager);
         mvInputMsgEditView = (EditText) this.findViewById(R.id.input_message);
         mvBtnSendMsg = (Button) this.findViewById(R.id.bentSendMessage);
         mvBtnSendMsg.setOnClickListener(this);
@@ -90,8 +113,9 @@ public class ChatActivity extends AppCompatActivity implements IChatView, OnClic
             lvList.add(pMsgModel);
             setAdadpter(lvList);
 
-        }else {
+        } else {
             mvChatAdapter.addItem(pMsgModel);
+            mvRecyclerView.smoothScrollToPosition(mvChatAdapter.getItemCount());
         }
     }
     public void setAdadpter(List<MsgModel> pList)
@@ -99,6 +123,7 @@ public class ChatActivity extends AppCompatActivity implements IChatView, OnClic
         mvChatAdapter = new chatAdapter(this,pList);
         mvRecyclerView.setAdapter(mvChatAdapter);
         mvRecyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL));
+        mvRecyclerView.smoothScrollToPosition(mvChatAdapter.getItemCount());
     }
 
     @Override

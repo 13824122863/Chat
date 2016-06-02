@@ -8,12 +8,13 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMClient;
+
 import java.util.List;
 
 import lzn.chat.R;
 import lzn.chat.absActivity;
 import lzn.chat.absFragment;
-import lzn.chat.db.DBManager;
 import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 import lzn.chat.main.item.messageItem.MessageFragment;
 import lzn.chat.main.presenter.AbsMainPresenter;
@@ -93,6 +94,7 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
         mvApplication.setMainActivity(this);
         mvFragmentManager = getFragmentManager();
         mvMainPresenter = new MainPresenterImpl(this,mvFragmentManager,this);
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
         initView();
         onClick(messageLayout); // 默认界面
     }
@@ -107,9 +109,8 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
         }else
         {
             //通知栏通知有新消息
+            NewMsgNotification(pMessage);
         }
-        DBManager lvDBManager = new DBManager(this);
-        lvDBManager.addChatMsg(pMessage);
     }
 
     private void initView() {

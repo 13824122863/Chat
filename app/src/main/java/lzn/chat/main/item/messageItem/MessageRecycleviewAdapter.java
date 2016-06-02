@@ -44,7 +44,11 @@ public class MessageRecycleviewAdapter extends RecyclerView.Adapter<MessageRecyc
         holder.mvNameView.setText(mvList.get(position).getFrom());
         holder.mvRootLayout.setTag(mvList.get(position));
     }
-
+    public void addItem(List<MsgModel> pMessage)
+    {
+        mvList.addAll(pMessage);
+        notifyItemRangeChanged(0, pMessage.size());
+    }
     @Override
     public int getItemCount() {
         return mvList.size();
