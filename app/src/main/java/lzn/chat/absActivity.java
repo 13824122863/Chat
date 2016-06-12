@@ -1,13 +1,15 @@
 package lzn.chat;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.view.WindowManager;
 
 import com.hyphenate.EMMessageListener;
@@ -20,6 +22,8 @@ import java.util.List;
 
 import lzn.chat.db.DBManager;
 import lzn.chat.main.item.contactItem.chat.model.MsgModel;
+import lzn.chat.main.item.contactItem.chat.view.ChatActivity;
+import lzn.chat.main.view.MainActivity;
 import lzn.chat.tools.ConstantManager;
 import lzn.chat.tools.Utils;
 
@@ -135,13 +139,30 @@ public abstract class absActivity extends AppCompatActivity {
     }
 
     public void NewMsgNotification(MsgModel pMsgModel) {
+
         NotificationCompat.Builder lvBuilder = new NotificationCompat.Builder(this);
         NotificationManager lvManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         lvBuilder.setContentTitle(pMsgModel.getFrom());
         lvBuilder.setContentText(pMsgModel.getContent());
         lvBuilder.setSmallIcon(R.drawable.account_icon);
         lvBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        lvManager.notify(1, lvBuilder.build());
+
+        Intent lvIntent1 = new Intent(this, ChatActivity.class);
+        lvIntent1.putExtra(ChatActivity.CHATTOWHO, pMsgModel.getFrom());
+        lvIntent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        Intent lvIntent0 = new Intent(this, MainActivity.class);
+
+        Intent[] lvIntents = new Intent[2];
+        lvIntents[0] = lvIntent0;
+        lvIntents[1] = lvIntent1;
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivities(this, 0, lvIntents, PendingIntent.FLAG_CANCEL_CURRENT);
+        lvBuilder.setContentIntent(resultPendingIntent);
+//        lvBuilder.setFullScreenIntent(resultPendingIntent, true);
+        lvBuilder.setAutoCancel(true);
+        lvBuilder.setColor(ContextCompat.getColor(this, R.color.colorAccent));
+        lvManager.notify(1, lvBuilder.build() );
 
     }
 

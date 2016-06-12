@@ -171,4 +171,9 @@ public class MainActivity extends absActivity implements OnClickListener ,IMainV
         settingImage.setImageResource(R.drawable.setting_unselected);
         settingText.setTextColor(Color.parseColor("#82858b"));
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

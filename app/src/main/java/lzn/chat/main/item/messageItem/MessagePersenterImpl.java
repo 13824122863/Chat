@@ -23,8 +23,8 @@ public class MessagePersenterImpl implements absMessagePresenter {
     public List<MsgModel> getAllChatHistory() {
         List<MsgModel> lvAllList = mvApplication.getDBManager().getAllMsgHistoryFromDb();
         List<MsgModel> lvResultList = new ArrayList<>();
-        MsgModel lvMsgModel = new MsgModel() ;
-        MsgModel lvNextData = new MsgModel();
+        MsgModel lvMsgModel ;
+        MsgModel lvNextData;
         for (int i = 0 ; i < lvAllList.size() ; i++)
         {
             lvMsgModel =  lvAllList.get(i);

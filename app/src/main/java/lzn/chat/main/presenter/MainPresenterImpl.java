@@ -41,6 +41,8 @@ public class MainPresenterImpl implements AbsMainPresenter {
      */
     private SettingFragment mvSettingFragment;
 
+    private absFragment mvCurrentFragment = null;
+
     private IMainView mvMainView;
     public  MainPresenterImpl(Context pContext,FragmentManager pFragmentManager,IMainView pMainView){
         mvContext = pContext;
@@ -59,14 +61,15 @@ public class MainPresenterImpl implements AbsMainPresenter {
             case 0:
                 // 当点击了消息tab时，改变控件的图片和文字颜色
 
-                if (mvMessageFragment == null) {
+//                if (mvMessageFragment == null) {
                     // 如果MessageFragment为空，则创建一个并添加到界面上
                     mvMessageFragment = new MessageFragment(mvContext);
                     transaction.add(R.id.content, mvMessageFragment);
-                } else {
+//                } else {
                     // 如果MessageFragment不为空，则直接将它显示出来
-                    transaction.show(mvMessageFragment);
-                }
+//                    transaction.show(mvMessageFragment);
+//                }
+                mvCurrentFragment = mvMessageFragment;
                 break;
             case 1:
 
@@ -78,6 +81,7 @@ public class MainPresenterImpl implements AbsMainPresenter {
                     // 如果ContactsFragment不为空，则直接将它显示出来
                     transaction.show(mvContactsFragment);
                 }
+                mvCurrentFragment = mvContactsFragment;
                 break;
             case 2:
 
@@ -89,6 +93,7 @@ public class MainPresenterImpl implements AbsMainPresenter {
                     // 如果NewsFragment不为空，则直接将它显示出来
                     transaction.show(mvDiscoveryFragment);
                 }
+                mvCurrentFragment = mvDiscoveryFragment;
                 break;
             case 3:
             default:
@@ -100,6 +105,7 @@ public class MainPresenterImpl implements AbsMainPresenter {
                     // 如果SettingFragment不为空，则直接将它显示出来
                     transaction.show(mvSettingFragment);
                 }
+                mvCurrentFragment = mvSettingFragment;
                 break;
         }
         transaction.commit();
@@ -123,18 +129,6 @@ public class MainPresenterImpl implements AbsMainPresenter {
     @Override
     public absFragment getCurrentFragment()
     {
-        if (mvMessageFragment != null) {
-           return mvMessageFragment;
-        }
-        if (mvContactsFragment != null) {
-            return mvContactsFragment;
-        }
-        if (mvDiscoveryFragment != null) {
-            return mvDiscoveryFragment;
-        }
-        if (mvSettingFragment != null) {
-            return mvSettingFragment;
-        }
-        return  null;
+        return  mvCurrentFragment;
     }
 }

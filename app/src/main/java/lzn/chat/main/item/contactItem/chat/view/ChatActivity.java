@@ -92,6 +92,7 @@ public class ChatActivity extends absActivity implements IChatView, OnClickListe
         mvList = mvChatPresenter.getMsgHistory(mvChatToWho);
         if (mvList.size() != 0) {
            setAdadpter(mvList);
+            
         }
     }
 
