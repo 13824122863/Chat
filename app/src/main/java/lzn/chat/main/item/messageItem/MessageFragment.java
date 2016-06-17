@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +20,7 @@ import lzn.chat.absFragment;
 import lzn.chat.main.item.contactItem.RecycleViewDivider;
 import lzn.chat.main.item.contactItem.chat.model.MsgModel;
 
-public class MessageFragment extends absFragment {
+public class MessageFragment extends absFragment  {
     private RecyclerView mvRecyclerView;
     private Context mvContext;
     private absMessagePresenter mvMessagePresenter;
@@ -50,6 +51,7 @@ public class MessageFragment extends absFragment {
         mvRecyclerView = (RecyclerView) pView.findViewById(R.id.recyclerView);
         mvRecyclerView.setLayoutManager(new LinearLayoutManager(mvContext));
         mvRecyclerView.addItemDecoration(new RecycleViewDivider(mvContext, LinearLayoutManager.HORIZONTAL));
+        mvRecyclerView.setHasFixedSize(true);
     }
 
     public void onRecevieNewMsg(List<MsgModel> pMessage) {
@@ -64,10 +66,29 @@ public class MessageFragment extends absFragment {
     }
 
     private void setAdapter() {
-        mvAllHistoryList = mvMessagePresenter.getAllChatHistory();
+//        List<MsgModel> lvList = (List<MsgModel>) ACache.get(mvContext).getAsObject("");
+//        if(lvList == null)
+             mvAllHistoryList = mvMessagePresenter.getAllChatHistory();
         if (mvAllHistoryList != null) {
             MessageRecycleviewAdapter lvAdapter = new MessageRecycleviewAdapter(mvContext, mvAllHistoryList);
             mvRecyclerView.setAdapter(lvAdapter);
+            final ItemTouchHelper lvItemTouchHelper = new ItemTouchHelper(new ItemDragCallBack(lvAdapter)/*.setDragListener(this)*/);
+            lvItemTouchHelper.attachToRecyclerView(mvRecyclerView);
+
+           /* mvRecyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(mvRecyclerView) {
+                @Override
+                public void onLongClick(RecyclerView.ViewHolder vh) {
+                    if (vh.getLayoutPosition() != mvAllHistoryList.size() - 1) {
+                        lvItemTouchHelper.startDrag(vh);
+                        VibratorUtil.Vibrate(getActivity(), 70);   //震动70ms
+                    }
+                }
+            });*/
         }
     }
+
+   /* @Override
+    public void onFinishDrag() {
+        ACache.get(mvContext).put("ListMsgItem", (ArrayList<MsgModel>)mvAllHistoryList);
+    }*/
 }
